@@ -75,10 +75,22 @@ export function Start() {
             </button>
           ))}
         </div>
-        {thanks && !lowStreak && <p class="note">Danke. Gut, dass du kurz bei dir warst.</p>}
-        {lowStreak && (
-          <p class="note warm">Es klingt, als wären die letzten Dienste schwer gewesen. Wenn du dich länger so fühlst, sprich mit jemandem. <a href="#/hilfe">Hier findest du Menschen, die zuhören.</a></p>
-        )}
+        {thanks && (() => {
+          const m = moods.find((x) => x.id === mood);
+          return (
+            <div class={`note ${mood <= 2 ? 'warm' : ''}`} aria-live="polite">
+              <p>{lowStreak
+                ? 'Die letzten Dienste waren offenbar schwer. Wenn du dich länger so fühlst, sprich mit jemandem – das ist keine Schwäche.'
+                : m.reply}</p>
+              {(m.action || m.help || lowStreak) && (
+                <div class="note-actions">
+                  {m.action && <a class="chip" href={m.action.href}>{m.action.label}</a>}
+                  {(m.help || lowStreak) && <a class="chip" href="#/hilfe">Mit jemandem reden</a>}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         <a class="hero" href="#/akut">
           <span class="hero-title">Gerade schwer</span>
@@ -215,11 +227,46 @@ export function Hilfe() {
             <li>du mehr trinkst, um abzuschalten</li>
           </ul>
         </div>
-        <a class="emergency" href="tel:144">In akuter Gefahr: Notruf 144</a>
+        <MyContacts />
+        <p class="small-call">In akuter Lebensgefahr außerhalb des Dienstes: <a href="tel:144">Rettung 144</a></p>
         <a class="link" href="#/info">Über Resi & Datenschutz</a>
       </main>
       <NavBar active="hilfe" />
     </div>
+  );
+}
+
+/* Eigene Kontakte, z. B. Krankenhausseelsorge, Peer-Ansprechperson – nur lokal gespeichert */
+function MyContacts() {
+  const [list, setList] = useState([]);
+  const [name, setName] = useState('');
+  const [tel, setTel] = useState('');
+  useEffect(() => { load('contacts', []).then(setList); }, []);
+  const add = async (e) => {
+    e.preventDefault();
+    if (!name.trim() || !tel.trim()) return;
+    const next = [...list, { name: name.trim(), tel: tel.trim() }];
+    setList(next); await save('contacts', next); setName(''); setTel('');
+  };
+  const remove = async (i) => { const next = list.filter((_, k) => k !== i); setList(next); await save('contacts', next); };
+  return (
+    <section>
+      <h2>Meine Kontakte</h2>
+      <p class="muted" style={{ margin: '0 0 10px' }}>Zum Beispiel die Krankenhausseelsorge, eine Peer-Ansprechperson oder eine Kollegin, der du vertraust. Bleibt nur auf diesem Handy.</p>
+      <div class="list">
+        {list.map((c, i) => (
+          <div key={i} class="call" style={{ paddingRight: 6 }}>
+            <a href={`tel:${c.tel.replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'none', flex: 1 }}><span><strong>{c.name}</strong><small>{c.tel}</small></span></a>
+            <button class="remove" aria-label={`${c.name} entfernen`} onClick={() => remove(i)}>×</button>
+          </div>
+        ))}
+        <form class="contact-form" onSubmit={add}>
+          <input aria-label="Name" placeholder="Name" value={name} onInput={(e) => setName(e.target.value)} />
+          <input aria-label="Telefonnummer" placeholder="Telefonnummer" type="tel" value={tel} onInput={(e) => setTel(e.target.value)} />
+          <button class="btn secondary" type="submit">Kontakt hinzufügen</button>
+        </form>
+      </div>
+    </section>
   );
 }
 
@@ -256,7 +303,9 @@ export function Lernpfad() {
 export function Verlauf() {
   const [list, setList] = useState([]);
   const [notes, setNotes] = useState([]);
+  const [draft, setDraft] = useState('');
   useEffect(() => { load('checkins', []).then(setList); load('notes', []).then(setNotes); }, []);
+  const addNew = async (e) => { e.preventDefault(); await addNote(draft, 'verlauf'); setDraft(''); setNotes(await load('notes', [])); };
   const days = Array.from({ length: 14 }, (_, k) => {
     const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (13 - k));
     const same = list.filter((c) => new Date(c.at).setHours(0, 0, 0, 0) === d.getTime());
@@ -282,7 +331,12 @@ export function Verlauf() {
         <div class="legend">{moods.map((m) => <span key={m.id}><i style={{ background: m.color }} />{m.label}</span>)}</div>
 
         <h2>Meine Notizen</h2>
-        {notes.length === 0 && <p class="muted">Noch keine Notizen.</p>}
+        <form class="box" onSubmit={addNew}>
+          <label for="newnote"><strong>Neue Notiz</strong></label>
+          <textarea id="newnote" rows="3" value={draft} onInput={(e) => setDraft(e.target.value)} placeholder="Was geht mir nach? Was war heute gut?" />
+          <button class="btn secondary" type="submit" disabled={!draft.trim()}>Notiz speichern</button>
+        </form>
+        {notes.length === 0 && <p class="muted">Noch keine Notizen. Du kannst auch nach jeder Übung etwas notieren.</p>}
         {[...notes].reverse().slice(0, 20).map((n) => (
           <div key={n.at} class="box"><small class="muted">{new Date(n.at).toLocaleDateString('de-AT')}</small><span>{n.text}</span></div>
         ))}
@@ -323,7 +377,7 @@ export function Info() {
         <p>Die App wird über GitHub Pages ausgeliefert. Beim Laden sieht GitHub, wie bei jeder Website, technisch deine IP-Adresse.</p>
         <h2>Wichtig</h2>
         <p>Resi ist kein Medizinprodukt und ersetzt keine Diagnose, Therapie oder Beratung. In akuter Gefahr: Notruf 144.</p>
-        <p class="muted">Version 0.1 · Quellcode: github.com/Mercucios/resi</p>
+        <p class="muted">Version 0.1.2 · Quellcode: github.com/Mercucios/resi</p>
       </main>
     </div>
   );

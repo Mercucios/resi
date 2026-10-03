@@ -21,5 +21,5 @@ export const addNote = async (text, occasion) => {
 };
 
 export const wipeAll = async () => {
-  for (const k of ['checkins', 'notes', 'region', 'done', 'onboarded']) { try { await del(k); } catch { /* */ } }
+  for (const k of ['checkins', 'notes', 'region', 'done', 'onboarded', 'contacts', 'after', 'voice']) { try { await del(k); } catch { /* */ } }
 };

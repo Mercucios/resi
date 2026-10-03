@@ -74,18 +74,27 @@ export const occasions = [
   { id: 'zuviel', label: 'Einfach alles zu viel', exercise: 'ankommen' }
 ];
 
+// Stimmungs-Skala beim Check-in. Farben: klar unterscheidbar und von hell nach dunkel abgestuft.
 export const moods = [
-  { id: 5, label: 'Gut', color: '#4C9A6A' },
-  { id: 4, label: 'Okay', color: '#8FB0A6' },
-  { id: 3, label: 'Ange\u00adspannt', color: '#C9A24A' },
-  { id: 2, label: 'Leer', color: '#B9784A' },
-  { id: 1, label: 'Schwer', color: '#8A4B3C' }
+  { id: 5, label: 'Gut', color: '#2E8B57',
+    reply: 'Sch\u00f6n! Was hat heute gut getan? Merk es dir \u2013 an schweren Tagen hilft genau das.' },
+  { id: 4, label: 'Okay', color: '#8DBF3F',
+    reply: 'Okay ist okay. G\u00f6nn dir trotzdem eine kleine Pause, bevor der Alltag weitergeht.' },
+  { id: 3, label: 'Z\u00e4h', color: '#F2C230',
+    reply: 'Z\u00e4he Dienste kosten Kraft. Schon drei ruhige Atemz\u00fcge k\u00f6nnen helfen.',
+    action: { label: 'Kurz durchatmen', href: '#/uebung/ankommen' } },
+  { id: 2, label: 'M\u00fcde', color: '#E67E22',
+    reply: 'Du hast heute viel gegeben. Jetzt z\u00e4hlt das Einfache: trinken, essen, schlafen.',
+    action: { label: 'Kurz durchatmen', href: '#/uebung/ankommen' } },
+  { id: 1, label: 'Schwer', color: '#B03A2E',
+    reply: 'Das klingt nach einem schweren Dienst. Du musst das nicht allein tragen.',
+    action: { label: 'Gerade schwer', href: '#/akut' }, help: true }
 ];
 
 // Stand 03.10.2026 – Quellen: gesundheit.gv.at, telefonseelsorge.at, secondvictim.at. Vor jeder Veröffentlichung prüfen.
 export const hotlines = {
   national: [
-    { name: 'TelefonSeelsorge', tel: '142', info: 'rund um die Uhr · anonym · gratis', primary: true },
+    { name: 'TelefonSeelsorge – Notruf', tel: '142', info: 'rund um die Uhr · anonym · gratis · auch Chat', primary: true },
     { name: 'Ö3-Kummernummer', tel: '116123', display: '116 123', info: 'täglich 16–24 Uhr' }
   ],
   secondVictim: { name: 'Second Victim Österreich', tel: '+43720704344', display: '+43 720 70 43 44', info: 'Für Gesundheitspersonal nach Fehlern und belastenden Ereignissen · Mo 9–11, Do 17–19 Uhr · anonym · gratis', mail: 'beratung@secondvictim.at' },
