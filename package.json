@@ -1,6 +1,6 @@
 {
   "name": "resi",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Resi – anonyme Begleit-App für Resilienz in der Pflege. Offline, ohne Konto, Open Source.",
   "private": true,
   "type": "module",

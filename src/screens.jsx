@@ -377,7 +377,7 @@ export function Info() {
         <p>Die App wird über GitHub Pages ausgeliefert. Beim Laden sieht GitHub, wie bei jeder Website, technisch deine IP-Adresse.</p>
         <h2>Wichtig</h2>
         <p>Resi ist kein Medizinprodukt und ersetzt keine Diagnose, Therapie oder Beratung. In akuter Gefahr: Notruf 144.</p>
-        <p class="muted">Version 0.1.2 · Quellcode: github.com/Mercucios/resi</p>
+        <p class="muted">Version 0.1.3 · Quellcode: github.com/Mercucios/resi</p>
       </main>
     </div>
   );
