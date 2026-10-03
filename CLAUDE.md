@@ -20,4 +20,5 @@ Resi ist eine nicht-kommerzielle, anonyme Begleit-App (PWA) für Pflegekräfte, 
 
 ## Zusammenarbeit
 
-David ist Projektinhaber und kein Vollzeit-Entwickler: Änderungen kurz auf Deutsch erklären. Sarah prüft alle Inhalte fachlich – neue oder geänderte Übungstexte als Entwurf kennzeichnen.
+David ist Projektinhaber und kein Vollzeit-Entwickler: Änderungen kurz auf Deutsch erklären.
+Bei jeder Änderung: Versionsnummer erhöhen (`package.json` und Info-Screen in `src/screens.jsx`), Eintrag in `CHANGELOG.md` ergänzen und David die neue Version in der Antwort nennen. Sarah prüft alle Inhalte fachlich – neue oder geänderte Übungstexte als Entwurf kennzeichnen.
